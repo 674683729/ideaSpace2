@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <link rel="stylesheet" href="/js/bootstrap/css/bootstrap.min.css">
+    <link href="/js/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css" rel="stylesheet">
+    <link href="/js/fileinput5/css/fileinput.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/js/bootstrap-select/css/bootstrap-select.min.css">
+    <link href="/js/ztree/css/zTreeStyle/zTreeStyle.css" rel="stylesheet" type="text/css" />
+    <title>用户注册</title>
+</head>
+<body>
+<!--引入导航条-->
+<div id="nav_html"></div>
+
+<div class="container">
+    <div class="row">
+        <div class="panel panel-primary" id="search_form">
+            <div class="panel-heading">注册会员</div>
+            <div class="panel-body">
+                <form class="form-horizontal" id="memberForm">
+                    <div class="form-group">
+                        <label for="memberName" class="col-sm-2 control-label">用户名</label>
+                        <div class="col-sm-5">
+                            <input type="text" class="form-control" onblur="chackMemberName()" name="memberName" id="memberName" placeholder="请输入用户名...">
+                        </div>
+                        <span class="col-sm-2" id="memberNameCheck">
+                        </span>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">密码</label>
+                        <div class="col-sm-5">
+                            <input type="password" class="form-control" onblur="checkPassword()" name="password" id="password" placeholder="请输入密码...">
+                        </div>
+                        <span class="col-sm-2" id="passwordCheck">
+                        </span>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">确认密码</label>
+                        <div class="col-sm-5">
+                            <input type="password" class="form-control" onblur="checkConfirmPassword()" name="confirmPassword" id="confirmPassword" placeholder="请输入确认密码...">
+                        </div>
+                        <span class="col-sm-2" id="confirmPasswordCheck">
+                        </span>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">真实姓名</label>
+                        <div class="col-sm-5">
+                            <input type="text" class="form-control" onblur="checkRealName()" name="realName" id="realName" placeholder="请输入真实姓名...">
+                        </div>
+                        <span class="col-sm-2" id="realNameCheck">
+                        </span>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">生日</label>
+                        <div class="col-sm-5">
+                            <input type="text" class="form-control" onblur="checkBirthday()" name="birthday" id="birthday" placeholder="请选择生日...">
+                        </div>
+                        <span class="col-sm-2" id="birthdayCheck">
+                        </span>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">邮箱</label>
+                        <div class="col-sm-5">
+                            <input type="text" class="form-control" onblur="checkEmail()" name="email" id="email" placeholder="请输入邮箱..">
+                        </div>
+                        <span class="col-sm-2" id="emailCheck">
+                        </span>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">手机号码</label>
+                        <div class="col-sm-5">
+                            <div class="input-group">
+                                <input type="text" class="form-control" onblur="checkPhone()" id="phone" placeholder="请输入手机号...">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-info" onclick="postPhoneCode()" id="postSMSBtn"  type="button">发送验证码</button>
+                                </span>
+                            </div>
+                        </div>
+                        <span class="col-sm-2" id="phoneCheck">
+                        </span>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">验证码</label>
+                        <div class="col-sm-5">
+                            <input type="text" class="form-control" onblur="checkCode()" name="smsCode" id="smsCode" placeholder="请输入验证码...">
+                        </div>
+                        <span class="col-sm-2" id="codeCheck">
+                        </span>
+                    </div>
+
+                    <div class="form-group" id="areaSelectDiv">
+                        <label class="col-sm-2 control-label">地区</label>
+                        <input type="hidden" name="area1" id="area1">
+                        <input type="hidden" name="area2" id="area2">
+                        <input type="hidden" name="area3" id="area3">
+                    </div>
+
+                    <div style="text-align: center">
+                        <button class="btn btn-primary" type="button" id="sub" onclick="addUser()"><i class="glyphicon glyphicon-plus"></i>注册会员</button>
+                        <button class="btn btn-default" type="reset" onclick="restRoleSelect()"><i class="glyphicon glyphicon-refresh"></i>重置</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<script type="text/javascript" src="/js/commons/jquery-3.3.1.js"></script>
+<script type="text/javascript" src="/js/bootbox/bootbox.min.js"></script>
+<script type="text/javascript" src="/js/bootstrap/js/bootstrap.js"></script>
+<script type="text/javascript" src="/js/DataTable/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="/js/DataTable/js/dataTables.bootstrap.min.js"></script>
+<!--时间-->
+<script type="text/javascript" src="/js/bootstrap-datetimepicker/js/moment-with-locales.js"></script>
+<script type="text/javascript" src="/js/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+<!-- 图片上传 -->
+<script type="text/javascript" src="/js/fileinput5/js/fileinput.min.js"></script>
+<script type="text/javascript" src="/js/fileinput5/js/locales/zh.js"></script>
+<!--多选下拉框-->
+<script src="/js/bootstrap-select/js/bootstrap-select.min.js"></script>
+<script type="text/javascript" src="/js/ztree/js/jquery.ztree.all.min.js"></script>
+<script src="/js/commons/nav.js"></script>
+
+<script>
+
+    $(function () {
+        initAreaAllList();//查询全部地区集合
+        initDatetimepicker();//日期插件
+    })
+
+    //新增用户
+    function addUser() {
+        var memberName = $("#memberName").val();
+        var password = $("#password").val();
+        var realName = $("#realName").val();
+        var phone = $("#phone").val();
+        var email = $("#email").val();
+        var birthday = $("#birthday").val();
+        var smsCode = $("#smsCode").val();
+        var area1 = $($("select[name='areaSelect']")[0]).val();
+        var area2 = $($("select[name='areaSelect']")[1]).val();
+        var area3 = $($("select[name='areaSelect']")[2]).val();
+        var params = {};
+        params.memberName = memberName;
+        params.password = password;
+        params.realName = realName;
+        params.phone = phone;
+        params.birthday = birthday;
+        params.email = email;
+        params.smsCode = smsCode;
+        params.area1 = area1;
+        params.area2 = area2;
+        params.area3 = area3;
+        $.ajax({
+            url:"http://localhost:8081/members",
+            type:"post",
+            data:params,
+            success:function (res) {
+                if (res.code == 200) {
+                    bootbox.alert({
+                        message:"注册成功！",
+                        size:"small",
+                        callback:function (res) {
+                            location.href = "http://localhost:8082";
+                        }
+                    })
+                }else {
+                    bootbox.alert({
+                        message:res.msg,
+                        size:"small",
+                    })
+                }
+            },
+            error:function (res) {
+                alert("请求失败！");
+            }
+        })
+
+    }
+
+    //加载地区三级联动下拉框
+    var obj;
+    function initAreaSelect(id, obj) {
+        if (obj) {
+            $(obj).parent().nextAll().remove();
+        }
+        var areaArr = getChildArr(id)
+        if (areaArr.length == 0) {
+            return ;
+        }
+        var v_select = '<div class="col-sm-2">';
+        v_select += '<select class="form-control" name="areaSelect" onchange="initAreaSelect(this.value, this)">';
+        v_select += '<option value="-1">==请选择==</option>';
+        for (var i = 0; i < areaArr.length; i++) {
+            v_select += '<option value="'+areaArr[i].id+'">'+areaArr[i].cityName+'</option>';
+        }
+        v_select += '</select>';
+        v_select += '</div>';
+        $("#areaSelectDiv").append(v_select);
+    }
+
+
+    //查询全部地区集合
+    var v_areaArr;
+    function initAreaAllList() {
+        $.ajax({
+            url:"http://localhost:8081/areas",
+            type:"get",
+            success:function (res) {
+                if (res.code == 200) {
+                    v_areaArr = res.data;
+                    initAreaSelect(1);//地区三级联动
+                }
+            }
+        })
+    }
+    //获取子节点数组
+    function getChildArr(id) {
+        var chileArr = [];
+        for (var i = 0; i < v_areaArr.length; i++) {
+            if (v_areaArr[i].fatherId == id) {
+                chileArr.push(v_areaArr[i]);
+            }
+        }
+        return chileArr;
+    }
+
+    //手机短信验证
+    function postPhoneCode() {
+        var v_phone = $("#phone").val();
+        /*if (v_phone == '') {
+            alert("请输入发送的手机号")
+            return  ;
+        }*/
+        /*$.ajax({
+            url:"http://localhost:8081/sms?phone="+v_phone,
+            type:"get",
+            success:function (res) {
+                if (res.code == 200) {
+                    //发送成功
+                    btnDisabled();
+                }else {
+                    /!*bootbox.alert({
+                        message:"失败:"+res.msg,
+                        size:"small",
+                    })*!/
+                    alert(res.msg)
+                }
+            },
+            error:function (res) {
+                alert("请求失败");
+            }
+        })*/
+    }
+
+    //发送短信按钮失效
+    var i = 60;
+    function btnDisabled() {
+        $("#postSMSBtn").attr("onclick","null");//按钮失效
+        $("#postSMSBtn").text(--i+"秒后重新发送");
+        var timeout = setTimeout(function(){btnDisabled()},1000);
+        if (i == 0) {
+            $("#postSMSBtn").attr("onclick","postPhoneCode()");//按钮生效
+            $("#postSMSBtn").text("发送验证码");
+            i=60;
+            clearInterval(timeout);//清除定时器
+        }
+    }
+
+
+    //验证用户名
+    var flag = false;
+    function chackMemberName() {
+        var memberName = $("#memberName").val();
+        var reg=/^[a-zA-Z]{1}([a-zA-Z0-9]|[._]){4,15}$/;
+        if (memberName == '') {
+            $("#memberNameCheck").html("*请输入用户名");
+            $("#memberNameCheck").css("color","red");
+            return;
+        }
+        if (reg.test(memberName) == false) {
+            $("#memberNameCheck").html("*用户名由字母开头的6~16位字符串");
+            $("#memberNameCheck").css("color","red");
+            return;
+        }
+        $.ajax({
+            url:"http://localhost:8081/members",
+            type:"get",
+            data:{"memberName":memberName},
+            success:function (res) {
+                if (res.code != 200) {
+                    //验证用户名
+                    $("#memberNameCheck").html("√");
+                    $("#memberNameCheck").css("color","green");
+                } else{
+                    $("#memberNameCheck").html("*用户名已存在");
+                    $("#memberNameCheck").css("color","red");
+                }
+            }
+            
+        })
+    }
+
+    //验证邮箱
+    function checkEmail() {
+        var reg=/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(document.getElementById("email").value);
+        var email = $("#email").val();
+        if (email == '') {
+            $("#emailCheck").html("*请输入邮箱");
+            $("#emailCheck").css("color","red");
+            return;
+        }
+        if (reg == false) {
+            $("#emailCheck").html("*邮箱格式不正确");
+            $("#emailCheck").css("color","red");
+            return;
+        }
+        $.ajax({
+            url:"http://localhost:8081/members/email",
+            type:"get",
+            data:{"email":email},
+            success:function (res) {
+                if (res.code != 200) {
+                    //验证邮箱
+                    $("#emailCheck").html("√");
+                    $("#emailCheck").css("color","green");
+                } else{
+                    $("#emailCheck").html("*邮箱已存在");
+                    $("#emailCheck").css("color","red");
+                }
+            }
+
+        })
+    }
+
+    //验证手机
+    function checkPhone() {
+        var reg=/^[+]{0,1}(\d){1,3}[ ]?([-]?((\d)|[ ]){1,12})+$/;
+        var phone = $("#phone").val();
+        if (phone == '') {
+            $("#phoneCheck").html("*请输入手机号");
+            $("#phoneCheck").css("color","red");
+            return;
+        }
+        if (reg.test(phone) == false) {
+            $("#phoneCheck").html("*手机格式不正确");
+            $("#phoneCheck").css("color","red");
+            return;
+        }
+        $.ajax({
+            url:"http://localhost:8081/members/phone",
+            type:"get",
+            data:{"phone":phone},
+            success:function (res) {
+                if (res.code != 200) {
+                    //验证邮箱
+                    $("#phoneCheck").html("√");
+                    $("#phoneCheck").css("color","green");
+                } else{
+                    $("#phoneCheck").html("*手机号已存在");
+                    $("#phoneCheck").css("color","red");
+                }
+            }
+
+        })
+    }
+
+    //失去焦点事件
+    function checkPassword() {
+        //密码
+        var reg1=/^(\w){6,16}$/;
+        var password = $("#password").val();
+        if (password == "" || reg1.test(password) == false) {
+            $("#passwordCheck").html("*密码6-16个字母、数字、下划线 ");
+            $("#passwordCheck").css("color","red");
+        }else{
+            $("#passwordCheck").html("√");
+            $("#passwordCheck").css("color","green");
+        }
+    }
+
+    function checkConfirmPassword() {
+        //确认密码
+        var confirmPassword = $("#confirmPassword").val();
+        if (password == "" || password != confirmPassword) {
+            $("#confirmPasswordCheck").html("*两次密码不一致");
+            $("#confirmPasswordCheck").css("color","red");
+        }else{
+            $("#confirmPasswordCheck").html("√");
+            $("#confirmPasswordCheck").css("color","green");
+        }
+    }
+
+    function checkRealName() {
+        //验证真实姓名
+        var reg2=/[\u4e00-\u9fa5]{2,10}/;
+        var realName = $("#realName").val();
+        if (realName == '' || reg2.test(realName) == false) {
+            $("#realNameCheck").html("*真实姓名由2到10位汉子组成");
+            $("#realNameCheck").css("color","red");
+        }else{
+            $("#realNameCheck").html("√");
+            $("#realNameCheck").css("color","green");
+        }
+    }
+
+    function checkBirthday() {
+        //生日
+        var reg3 = /^[1-9]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/;
+        var birthday = $("#birthday").val();
+        if (birthday == '' || reg3.test(birthday) == false) {
+            $("#birthdayCheck").html("*日期格式为yyyy-mm-dd");
+            $("#birthdayCheck").css("color","red");
+        }else{
+            $("#birthdayCheck").html("√");
+            $("#birthdayCheck").css("color","green");
+        }
+    }
+
+    function checkCode(){
+        //验证码
+        var smsCode = $("#smsCode").val();
+        if (smsCode == '') {
+            $("#codeCheck").html("*请输入验证码");
+            $("#codeCheck").css("color","red");
+        }else{
+            $("#codeCheck").html("√");
+            $("#codeCheck").css("color","green");
+        }
+    }
+
+    function check() {
+        if (flag == false) {
+            $("#sub").attr("disabled","disabled");
+        }else{
+            $("#sub").removeAttr("disabled")
+        }
+    }
+
+    //时间组件
+    function initDatetimepicker() {
+        $("#birthday").datetimepicker({
+            format: 'YYYY-MM-DD',
+            locale: 'zh-CN',
+            showClear: true
+        });
+    }
+</script>
+
+</body>
+</html>

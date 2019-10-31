@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>用户登录页面</title>
+    <link rel="stylesheet" href="/js/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/js/DataTable/css/dataTables.bootstrap.min.css"/>
+    <link rel="stylesheet" href="/js/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css">
+</head>
+<body>
+<!--引入导航条-->
+<div id="nav_html"></div>
+
+<form class="form-horizontal  col-sm-6" style="margin-left: 400px;margin-top: 100px">
+    <div class="form-group">
+        <label class="col-sm-2 control-label">会员名</label>
+        <div class="col-sm-5">
+            <input type="email" class="form-control" id="memberName" placeholder="请输入用户名">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="password" class="col-sm-2 control-label">密码</label>
+        <div class="col-sm-5">
+            <input type="password" class="form-control" id="password" placeholder="请输入用户密码">
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button class="btn btn-primary" type="button" onclick="login_user()"><i class="glyphicon glyphicon-user"></i>登录</button>
+            <button type="reset" class="btn btn-primary"><i class="glyphicon glyphicon-erase"></i>重置</button>
+        </div>
+    </div>
+</form>
+
+
+<script src="/js/commons/jquery-3.3.1.js"></script>
+<script src="/js/DataTable/js/jquery.dataTables.min.js"></script>
+<script src="/js/DataTable/js/dataTables.bootstrap.min.js"></script>
+<script src="/js/bootstrap/js/bootstrap.min.js"></script>
+<script src="/js/bootbox/bootbox.min.js"></script>
+<script src="/js/bootbox/bootbox.locales.min.js"></script>
+<script src="/js/bootstrap-datetimepicker/js/moment-with-locales.js"></script>
+<script src="/js/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+<!--全局ajaxSetUp-->
+<script src="/js/commons/jquery.cookie.min.js"></script>
+<script src="/js/commons/nav.js"></script>
+<script>
+    //登陆的ajax
+    function login_user() {
+        var memberName = $("#memberName").val();
+        var password = $("#password").val();
+
+        $.ajax({
+            url: "http://localhost:8081/members/login",
+            data:{memberName:memberName, password:password},
+            type:"post",
+            backdrop:false,
+            success: function (res) {
+                if(res.code==200){
+                    //登录成功
+                    var data = res.data;
+                    $.cookie("fh_token",data);
+                    location.href = "/";
+                }else{
+                    bootbox.alert({
+                        message:res.msg,
+                        size:"small",
+                        backdrop:false,
+                    })
+                }
+            }
+        })
+    }
+
+
+</script>
+</body>
+</html>
